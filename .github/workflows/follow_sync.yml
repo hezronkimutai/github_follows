@@ -2,7 +2,7 @@ name: GitHub Follow Sync
 
 on:
   schedule:
-    - cron: '* * * * *'  # Run every minute
+    - cron: '*/5 * * * *'  # Run every 5 minutes
   workflow_dispatch:      # Allow manual trigger
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
     - name: Run follow sync script
       env:
         GH_USERNAME: ${{ secrets.GH_USERNAME }}
-        TOKEN: ${{ secrets.GH_TOKEN }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         python run.py
       continue-on-error: false

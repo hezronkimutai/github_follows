@@ -18,12 +18,12 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 GH_USERNAME = os.getenv('GH_USERNAME')
-TOKEN = os.getenv('TOKEN')  # Needs `user:follow` scope
+GH_TOKEN = os.getenv('GH_TOKEN')  # Needs `user:follow` scope
 
-if not GH_USERNAME or not TOKEN:
-    raise ValueError("GH_USERNAME and TOKEN environment variables are required")
+if not GH_USERNAME or not GH_TOKEN:
+    raise ValueError("GH_USERNAME and GH_TOKEN environment variables are required")
 
-HEADERS = {'Authorization': f'token {TOKEN}'}
+HEADERS = {'Authorization': f'token {GH_TOKEN}'}
 
 # Configure retry strategy
 retry_strategy = Retry(
