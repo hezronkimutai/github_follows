@@ -1,0 +1,43 @@
+name: GitHub Follow Sync
+
+on:
+  schedule:
+    - cron: '* * * * *'  # Run every minute
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Run follow sync script
+      env:
+        USERNAME: ${{ secrets.GH_USERNAME }}
+        TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        python run.py
+      continue-on-error: false
+      
+    - name: Report failure
+      if: failure()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: 'Follow Sync Workflow Failed',
+            body: `Workflow failed at ${new Date().toISOString()}\nSee: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
+          })
