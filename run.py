@@ -17,11 +17,11 @@ logger = logging.getLogger(__name__)
 # Load environment variables from .env
 load_dotenv()
 
-USERNAME = os.getenv('USERNAME')
+GH_USERNAME = os.getenv('GH_USERNAME')
 TOKEN = os.getenv('TOKEN')  # Needs `user:follow` scope
 
-if not USERNAME or not TOKEN:
-    raise ValueError("USERNAME and TOKEN environment variables are required")
+if not GH_USERNAME or not TOKEN:
+    raise ValueError("GH_USERNAME and TOKEN environment variables are required")
 
 HEADERS = {'Authorization': f'token {TOKEN}'}
 
@@ -75,11 +75,11 @@ def get_users(url):
 def main():
     try:
         # Step 1: Get followers
-        followers = get_users(f'https://api.github.com/users/{USERNAME}/followers')
+        followers = get_users(f'https://api.github.com/users/{GH_USERNAME}/followers')
         logger.info(f"Followers: {len(followers)}")
 
         # Step 2: Get following
-        following = get_users(f'https://api.github.com/users/{USERNAME}/following')
+        following = get_users(f'https://api.github.com/users/{GH_USERNAME}/following')
         logger.info(f"Following: {len(following)}")
 
         # Step 3: Unfollow those who don't follow you back
